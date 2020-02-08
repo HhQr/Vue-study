@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue基础</title>
+</head>
+
+<body>
+    <div id="app">
+        <h1>computed 计算属性</h1>
+        {{message}}
+        <p>
+            {{reversedMessage}}
+        </p>
+        <p>
+            {{now}}
+        </p>
+        <h1>
+            watch 侦听属性
+        </h1>
+        <div>
+            {{fullName}}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                message: 'hello word',
+                // fullName : 'Foo Bar',
+                firstName: 'Foo',
+                lastName: 'Bar',
+            },
+            computed: {
+                reversedMessage: function () {
+                    return this.message.split('').reverse().join('')
+                },
+                now: function () {
+                    return Date.now()
+                },
+                fullName : {
+                    get : function(){
+                        // firstName 和 lastName 两者任意一个不发生变化， 则fullName不在发生变化
+                        // 相关响应式依赖发生变化，计算属性才回重新求职
+                        return this.firstName + ' ' + this.lastName
+                    },
+                    set : function (val) {
+                        this.message = val;
+                        this.firstName = "2"
+                    }
+                }
+            },
+            // 当需要在数据变化时执行异步或者开销较大的操作时，才使用watch
+            // watch: {
+            //     firstName : function(val){
+            //         this.fullName = val + ' ' + this.lastName
+            //     },
+            //     lastName : function(val) {
+            //         this.fullName = this.firstName + ' ' + val
+            //     }
+            // }
+        })
+
+    </script>
+</body>
+
+</html>
