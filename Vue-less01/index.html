@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue基础</title>
+</head>
+
+<body>
+    <div id="app">
+        {{message}}
+        <div :id="message">
+            <ul>
+                <li>
+                    <span v-if='item.del'>{{item.title}}</span>
+                    <span v-else style="text-decoration: line-through;">{{item.title}}</span>
+                </li>
+            </ul>
+        </div>
+        <div :id="message+ '1'">
+            <h1>父子组件通信 props $emit</h1>
+            <p>本学期分数</p>
+            <todo-list></todo-list>
+        </div>
+        <div>
+            <h1>自定义组件使用v-model</h1>
+            <custom-input v-model="customValue"></custom-input>
+            <p>自定义输入框的值为：{{customValue}}</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        Vue.component('todo-item', {
+            template: `
+                <li>
+                    <span>{{title}}</span>
+                    <span>{{number}}</span>
+                    <button v-on:click = "addNumber(number)">添加1分</button>
+                    <button @click = "resNumber(number)">减少1分</button>
+                </li>
+            `,
+            props: {
+                title: {
+                    type: String,
+                    default: ''
+                },
+                number: {
+                    type: Number,
+                    default: 98
+                }
+
+            },
+            data: function () {
+                return {
+                    item: {
+                        title: '数学',
+                        number: 96
+                    }
+                }
+            },
+            methods: {
+                addNumber(number) {
+                    this.$emit('add-number' , ++number);
+                    // let $parent = this.$parent;
+                    // console.log($parent);
+                },
+                resNumber(number) {
+                    this.$emit('res-number')
+                    number--;
+                }
+            }
+        })
+
+        Vue.component('todo-list', {
+            template: `
+            <ul>
+                <li v-for="item of list">
+                    <!-- @addNumber $emit 不能识别  只能使用@add-number -->
+                    <todo-item @add-number="addNumber($event,item)" @res-number="resNumber(item)" :title='item.title' :number="item.number"></todo-item>
+                </li>
+            </ul>
+            `,
+            data: function () {
+                return {
+                    list: [
+                        {
+                            title: '数学',
+                            number: 98,
+                        },
+                        {
+                            title: '英语',
+                            number: 88,
+                        }
+                    ]
+                }
+            }
+            ,
+            methods: {
+                addNumber($event,item) {
+                    // item.number ++;
+                    item.number = $event;
+                    console.log($event)
+                },
+                resNumber(item) {
+                    item.number--;
+                }
+            }
+        })
+
+        Vue.component('custom-input', {
+            props: {
+                value: String
+            },
+            template: `
+                <input
+                :value="value"
+                @input="change"
+                >
+            `,
+            data: function () {
+                return {
+                    customValue: 60
+                }
+            },
+            methods: {
+                change(e) {
+                    this.$emit('input', e.target.value)
+                }
+            }
+        })
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                message: 'hello word',
+                item: {
+                    title: '语文',
+                    del: false
+                },
+                customValue: "36"
+            },
+
+        })
+
+    </script>
+</body>
+
+</html>
