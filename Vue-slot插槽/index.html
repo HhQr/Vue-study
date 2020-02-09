@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue插槽使用</title>
+</head>
+
+<body>
+    <div id="app">
+        <div :id="message+ '1'">
+            <h1>2.5版本之前的slot使用方法</h1>
+            <p>本学期分数</p>
+            <todo-list>
+                <!-- 2.5之前版本的插槽使用方法 -->
+                <!-- @addNumber $emit 不能识别  只能使用@add-number -->
+                <todo-item v-for="item of list"  @add-number="addNumber($event,item)" @res-number="resNumber(item)" :title='item.title' :number="item.number">
+                    <!-- 具名插槽使用方法 -->
+                    <span slot="pre-icon">前置图标</span>
+                    <span slot="suf-icon">后置图标</span>
+                </todo-item>
+            </todo-list>
+
+            <h1>2.5版本之后的slot使用方法 template</h1>
+            <p>本学期分数</p>
+            <todo-list>
+                <!-- 2.5之后版本的插槽使用方法 -->
+                <!--template 默认插槽可以省略不写 -->
+                <template>
+                    <todo-item v-for="item of list"  @add-number="addNumber($event,item)" @res-number="resNumber(item)" :title='item.title' :number="item.number">
+                        <!-- 具名插槽使用方法  v-slot 指令使用-->
+                        <template v-slot:pre-icon>
+                            <span>前置图标</span>
+                        </template>
+                        <!-- 通过插槽子组件向父组件传递值 -->
+                        <template v-slot:suf-icon="{value}">
+                            <span v-if="value > 0.5">后置图标 {{value}}</span>
+                            <span v-else>笑 {{value}}</span>
+                        </template>
+                    </todo-item>
+                </template>
+            </todo-list>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        Vue.component('todo-item', {
+            template: `
+                <li>
+                    <slot name="pre-icon"></slot>
+                    <span>{{title}}</span>
+                    <span>{{number}}</span>
+                    <slot name="suf-icon" :value="slotValue"></slot>
+                    <button v-on:click = "addNumber(number)">添加1分</button>
+                    <button @click = "resNumber(number)">减少1分</button>
+                </li>
+            `,
+            props: {
+                title: {
+                    type: String,
+                    default: ''
+                },
+                number: {
+                    type: Number,
+                    default: 98
+                }
+
+            },
+            data: function () {
+                return {
+                    item: {
+                        title: '数学',
+                        number: 96
+                    },
+                    slotValue: Math.random()
+                }
+            },
+            methods: {
+                addNumber(number) {
+                    this.$emit('add-number', ++number);
+                    // let $parent = this.$parent;
+                    // console.log($parent);
+                },
+                resNumber(number) {
+                    this.$emit('res-number')
+                    number--;
+                }
+            }
+        })
+
+        Vue.component('todo-list', {
+            template: `
+            <ul>
+                <slot></slot>
+            </ul>
+            `,
+            data: function () {
+                return {
+                }
+            }
+        })
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                message: 'hello word',
+                item: {
+                    title: '语文',
+                    del: false
+                },
+                customValue: "36",
+                list: [
+                        {
+                            title: '数学',
+                            number: 98,
+                        },
+                        {
+                            title: '英语',
+                            number: 88,
+                        }
+                    ]
+            },
+            methods: {
+                addNumber($event, item) {
+                    // item.number ++;
+                    item.number = $event;
+                    console.log($event)
+                },
+                resNumber(item) {
+                    item.number--;
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>
