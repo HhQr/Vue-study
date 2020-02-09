@@ -34,9 +34,9 @@
                             <span>前置图标</span>
                         </template>
                         <!-- 通过插槽子组件向父组件传递值 -->
-                        <template v-slot:suf-icon="{value}">
-                            <span v-if="value > 0.5">后置图标 {{value}}</span>
-                            <span v-else>笑 {{value}}</span>
+                        <template v-slot:suf-icon="{id}">
+                            <span v-if="id > 0.5">后置图标 {{id}}</span>
+                            <span v-else>笑 {{id}}</span>
                         </template>
                     </todo-item>
                 </template>
@@ -52,7 +52,7 @@
                     <slot name="pre-icon"></slot>
                     <span>{{title}}</span>
                     <span>{{number}}</span>
-                    <slot name="suf-icon" :value="slotValue"></slot>
+                    <slot name="suf-icon" :id="slotValue"></slot>
                     <button v-on:click = "addNumber(number)">添加1分</button>
                     <button @click = "resNumber(number)">减少1分</button>
                 </li>
