@@ -11,6 +11,8 @@
       />
       <slot></slot>
     </ul>
+    <p>使用Vuex {{ loading }}   {{title}}</p>
+    <h5>{{ count }}</h5>
   </div>
 </template>
 
@@ -36,12 +38,25 @@ export default {
       ]
     };
   },
+  computed: {
+    count: function() {
+      return this.$store.state.count;
+    },
+    loading: function() {
+      return this.$store.state.loading;
+    },
+    title : function (){
+      return this.$store.state.title;
+    }
+  },
   methods: {
     addNumber(item) {
       item.number++;
+      this.$store.dispatch("asyncShowCount");
     },
     resNumber(item) {
       item.number--;
+      this.$store.commit('increment' , -10);
     }
   },
   beforeCreate() {

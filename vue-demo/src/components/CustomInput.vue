@@ -13,29 +13,29 @@ export default {
       default: ""
     }
   },
-  beforeCreate(){
-    console.log('beforeCreate c2 ')
+  beforeCreate() {
+    console.log("beforeCreate c2 ")
   },
-  created(){
-    console.log('created c2 ')
+  created() {
+    console.log("created c2 ");
   },
-  beforeMount(){
-     console.log('beforeMout c2 ')
+  beforeMount() {
+    console.log("beforeMout c2 ");
   },
-  mounted(){
-     console.log('mounted c2 ')
+  mounted() {
+    console.log("mounted c2 ");
   },
-  beforeUpdate(){
-    console.log('beforeUpdate c2')
+  beforeUpdate() {
+    console.log("beforeUpdate c2");
   },
-  updated(){
-    console.log('updated c2 ')
+  updated() {
+    console.log("updated c2 ");
   },
-  beforeDestroy(){
-    console.log('beforeDestroy c2 ')
+  beforeDestroy() {
+    console.log("beforeDestroy c2 ");
   },
-  destroyed(){
-    console.log('destroyed c2 ')
+  destroyed() {
+    console.log("destroyed c2 ");
   }
 };
 </script>
